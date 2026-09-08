@@ -40,6 +40,6 @@ public class Curso {
     @Column(nullable = false, columnDefinition = "estado_curso")
     private EstadoCurso estado = EstadoCurso.pendiente;
 
-    @Column(precision = 3, scale = 1)
+    @Column(precision = 5, scale = 2)
     private BigDecimal nota;
 }
