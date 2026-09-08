@@ -7,6 +7,8 @@ import com.project.NextTracker.repository.EvaluacionRepository;
 import org.springframework.stereotype.Service;
 import com.project.NextTracker.dto.EvaluacionDTO;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -103,6 +105,29 @@ public class EvaluacionService {
                 evaluacion.getPorcentajeObtenido()
         );
 
+        BigDecimal porcentajeOtros =
+                evaluacionRepository
+                        .findByCursoId(existing.getCurso().getId())
+                        .stream()
+                        .filter(e -> !e.getId().equals(id))
+                        .map(Evaluacion::getPorcentaje)
+                        .reduce(
+                                BigDecimal.ZERO,
+                                BigDecimal::add
+                        );
+
+        BigDecimal nuevoTotal =
+                porcentajeOtros.add(
+                        evaluacion.getPorcentaje()
+                );
+
+        if (nuevoTotal.compareTo(BigDecimal.valueOf(100)) > 0) {
+
+            throw new IllegalArgumentException(
+                    "El porcentaje total de las evaluaciones no puede superar el 100%"
+            );
+        }
+
         existing.setNombre(
                 evaluacion.getNombre()
         );
@@ -159,5 +184,28 @@ public class EvaluacionService {
                     "El porcentaje obtenido no puede ser mayor al porcentaje de la evaluación"
             );
         }
+    }
+
+    @Transactional
+    public Evaluacion actualizarPorcentajeObtenido(
+            Integer id,
+            BigDecimal porcentajeObtenido
+    ) {
+
+        Evaluacion evaluacion = evaluacionRepository.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException(
+                                "Evaluación no encontrada con el id: " + id
+                        )
+                );
+
+        validarPorcentaje(
+                evaluacion.getPorcentaje(),
+                porcentajeObtenido
+        );
+
+        evaluacion.setPorcentajeObtenido(porcentajeObtenido);
+
+        return evaluacionRepository.save(evaluacion);
     }
 }

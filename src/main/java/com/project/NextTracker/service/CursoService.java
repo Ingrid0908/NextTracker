@@ -51,13 +51,21 @@ public class CursoService {
 
         Curso curso = findById(id);
 
-        if (curso.getEstado() != EstadoCurso.pendiente) {
+        if (curso.getEstado() != EstadoCurso.pendiente && curso.getEstado() != EstadoCurso.reprobado) {
             throw new IllegalStateException(
-                    "El curso no está pendiente y no puede ser matriculado"
+                    "El curso no puede ser matriculado nuevamente"
+            );
+        }
+
+        if (curso.getEstado() == EstadoCurso.reprobado) {
+
+            evaluacionRepository.deleteAll(
+                    evaluacionRepository.findByCursoId(id)
             );
         }
 
         curso.setEstado(EstadoCurso.matriculado);
+        curso.setNota(null);
 
         return cursoRepository.save(curso);
     }

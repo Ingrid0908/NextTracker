@@ -6,6 +6,7 @@ import com.project.NextTracker.service.EvaluacionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @CrossOrigin(origins = {
@@ -52,6 +53,20 @@ public class EvaluacionController {
 
         return ResponseEntity.ok(
                 evaluacionService.update(id, evaluacion)
+        );
+    }
+
+    @PutMapping("/{id}/porcentaje-obtenido")
+    public ResponseEntity<Evaluacion> actualizarPorcentajeObtenido(
+            @PathVariable Integer id,
+            @RequestBody BigDecimal porcentajeObtenido
+    ) {
+
+        return ResponseEntity.ok(
+                evaluacionService.actualizarPorcentajeObtenido(
+                        id,
+                        porcentajeObtenido
+                )
         );
     }
 
