@@ -9,7 +9,10 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = {
+        "http://localhost:5173",
+        "https://nexttracker-frontend.onrender.com"
+})
 @RestController
 @RequestMapping("malla/cursos")
 public class CursoController {
