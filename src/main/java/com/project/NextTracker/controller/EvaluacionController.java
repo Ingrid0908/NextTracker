@@ -11,7 +11,8 @@ import java.util.List;
 
 @CrossOrigin(origins = {
         "http://localhost:5173",
-        "https://nexttracker-frontend.onrender.com"
+        "https://nexttracker-frontend.onrender.com",
+        "https://nexttracker-508815.web.app/"
 })
 @RestController
 @RequestMapping("/malla/evaluaciones")
